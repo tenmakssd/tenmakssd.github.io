@@ -285,6 +285,21 @@
   alert(' Current orientation is ' + screen.orientation.type);
 	// console.log('Current orientation is ' + screen.orientation.type);
 });
+
+
+let portrait = window.matchMedia("(orientation: portrait)");
+
+portrait.addEventListener("change", function(e) {
+    if(e.matches) {
+        // Portrait mode
+        Plotly.Plots.resize();
+  alert('2 Current orientation is ' + screen.orientation.type);
+    } else {
+        // Landscape
+        Plotly.Plots.resize();
+  alert('2 Current orientation is ' + screen.orientation.type);
+    }
+})
 </script>
 
 </body></html>
