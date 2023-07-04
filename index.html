@@ -276,7 +276,14 @@
 </script>
 
     
-  
+  <script>
+
+screen.orientation.addEventListener('change', function() {
+  Plotly.Plots.resize();
+	// console.log('Current orientation is ' + screen.orientation.type);
+});
+
+  </script>
 
 </body></html>
 
