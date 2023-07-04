@@ -237,8 +237,192 @@
   </footer>
 </div>
  -->
+ <script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js';
+  import { getDatabase, ref, onValue, get } from 'https://www.gstatic.com/firebasejs/9.9.0/firebase-database.js';
+
+
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+      apiKey: "AIzaSyCZ5VOK0MVfAW-eptdXKxC5egvtK15QAoM",
+      authDomain: "tenmak-ssd.firebaseapp.com",
+      databaseURL: "https://tenmak-ssd-default-rtdb.firebaseio.com",
+      projectId: "tenmak-ssd",
+      storageBucket: "tenmak-ssd.appspot.com",
+      messagingSenderId: "624648233215",
+      appId: "1:624648233215:web:3b154bb1679bbc2d13acca",
+      measurementId: "G-G06PGHE21K"
+  };
+
+
+
+
+
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig, "secondary");
+
+
+  // const analytics = getAnalytics(app);
+  const database = getDatabase(app);
+
+
+  const deviceref = ref(database);
+
+  var deviceselectbox = document.getElementById("deviceselect");
+  var dayselectbox = document.getElementById("dayselect");
+
+  onValue(deviceref, (snapshot1) => {
+      //   const data = snapshot.val();
+      var i = 0;
+      var j = 0;
+      Object.keys(snapshot1.val()).forEach((key1) => {
+          if (i == 2) {
+
+
+              // console.log(document.getElementById('deviceselect').options[document.getElementById('deviceselect').selectedIndex]);
+              const dayref = ref(database, "/" + key1 + "/Doz/");
+              onValue(dayref, (snapshot2) => {
+                  //   const data = snapshot.val();
+                  // console.log(snapshot.val());
+                  Object.keys(snapshot2.val()).forEach((key2) => {
+                      // console.log(key);
+                      if (j == 4) {
+                          const doseref = ref(database, "/" + key1 + "/Doz/" + key2);
+                          var dosetime = [];
+                          var dosevalue = [];
+                          onValue(doseref, (snapshot3) => {
+                              //   const data = snapshot.val();
+                              console.log(snapshot3.val());
+                              Object.entries(snapshot3.val()).forEach((key3, value3) => {
+
+                                  dosetime.push(key3[0].split("_")[0].substring(8, 10) + ":" + key3[0].split("_")[0].substring(10, 12) + ":" + key3[0].split("_")[0].substring(12));
+                                  dosevalue.push(key3[1]);
+                                  // var option = document.createElement("OPTION");
+                                  //    option.innerHTML = key;
+                                  //    option.value = key;
+                                  //    dayselectbox.options.add(option);
+                              });
+
+                              //   console.log( Object.keys(snapshot.val()));
+                              //   updateStarCount(postElement, data);
+                          });
+                          var trace1 = {
+                              x: dosetime,
+                              y: dosevalue,
+                              type: 'scatter'
+                          };
+                          var data = [trace1];
+
+                          Plotly.newPlot('plotlydaychart', data);
+
+                      };
+
+                      var option = document.createElement("OPTION");
+                      option.innerHTML = key2;
+                      option.value = key2;
+                      dayselectbox.options.add(option);
+                      if (j == 4) {
+                          option.selected = true;
+                      }
+                      j++;
+                  });
+              });
+          };
+
+          var option = document.createElement("OPTION");
+          option.innerHTML = key1;
+          option.value = key1;
+          if (i == 2) {
+              option.selected = true;
+          }
+          deviceselectbox.options.add(option);
+          i++;
+      });
+
+      //   console.log( Object.keys(snapshot.val()));
+      //   updateStarCount(postElement, data);
+  });
+
+
+
+
+
+  document.getElementById('deviceselect').addEventListener('change', async (event) => {
+      dayselectbox.innerText = null;
+      const dayref = ref(database, "/" + event.target.value + "/Doz/");
+      onValue(dayref, (snapshot) => {
+          //   const data = snapshot.val();
+          console.log(snapshot.val());
+          Object.keys(snapshot.val()).forEach((key) => {
+              // console.log(key);
+              var option = document.createElement("OPTION");
+              option.innerHTML = key;
+              option.value = key;
+              dayselectbox.options.add(option);
+          })
+
+          //   console.log( Object.keys(snapshot.val()));
+          //   updateStarCount(postElement, data);
+      });
+      dayselectbox.dispatchEvent(new Event('change'));
+      document.getElementById('showAnotherButton').dispatchEvent(new Event('click'));
+
+  });
+
+  document.getElementById('dayselect').addEventListener('change', async (event) => {
+      const doseref = ref(database, "/" + document.getElementById('deviceselect').value + "/Doz/" + event.target.value);
+      var dosetime = [];
+      var dosevalue = [];
+      onValue(doseref, (snapshot) => {
+          //   const data = snapshot.val();
+          // console.log(snapshot.val());
+          Object.entries(snapshot.val()).forEach((key, value) => {
+
+              dosetime.push(key[0].split("_")[0].substring(8, 10) + ":" + key[0].split("_")[0].substring(10, 12) + ":" + key[0].split("_")[0].substring(12));
+              dosevalue.push(key[1]);
+              // var option = document.createElement("OPTION");
+              //    option.innerHTML = key;
+              //    option.value = key;
+              //    dayselectbox.options.add(option);
+          });
+
+          //   console.log( Object.keys(snapshot.val()));
+          //   updateStarCount(postElement, data);
+      });
+      var trace1 = {
+          x: dosetime,
+          y: dosevalue,
+          type: 'scatter'
+      };
+
+      var deviceselectbox = document.getElementById("deviceselect");
+      var dayselectbox = document.getElementById("dayselect");
+
+
+      var data = [trace1];
+
+      Plotly.newPlot('plotlydaychart', data);
+
+  });
+
+ 
+
+
+
+
+</script>
 
     
   
 
 </body></html>
+
+
+
+
+
