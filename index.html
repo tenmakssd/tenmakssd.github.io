@@ -179,8 +179,14 @@
                               type: 'scatter'
                           };
                           var data = [trace1];
+                          var layout = { 
+                            title: key1 + ' ' + key2,
+                            font: {size: 18}
+                          };
 
-                          Plotly.newPlot('plotlydaychart', data);
+                          var config = {responsive: true}
+
+                          Plotly.newPlot('plotlydaychart', data, layout, config );
 
                       };
 
@@ -268,7 +274,14 @@
 
       var data = [trace1];
 
-      Plotly.newPlot('plotlydaychart', data);
+      var layout = { 
+                            title: document.getElementById('deviceselect').value + ' ' + event.target.value,
+                            font: {size: 18}
+                          };
+
+                          var config = {responsive: true}
+
+      Plotly.newPlot('plotlydaychart', data, layout, config);
 
   });
 
@@ -287,19 +300,19 @@
 });
 
 
-let portrait = window.matchMedia("(orientation: portrait)");
+// let portrait = window.matchMedia("(orientation: portrait)");
 
-portrait.addEventListener("change", function(e) {
-    if(e.matches) {
-        // Portrait mode
-        // Plotly.Plots.resize();
-  alert('2 Current orientation is ' + screen.orientation.type);
-    } else {
-        // Landscape
-        // Plotly.Plots.resize();
-  alert('2 Current orientation is ' + screen.orientation.type);
-    }
-})
+// portrait.addEventListener("change", function(e) {
+//     if(e.matches) {
+//         // Portrait mode
+//         // Plotly.Plots.resize();
+//   alert('2 Current orientation is ' + screen.orientation.type);
+//     } else {
+//         // Landscape
+//         // Plotly.Plots.resize();
+//   alert('2 Current orientation is ' + screen.orientation.type);
+//     }
+// })
 </script>
 
 </body></html>
